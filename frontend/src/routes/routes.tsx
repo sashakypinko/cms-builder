@@ -2,11 +2,14 @@ import React, { type ReactElement, useMemo } from 'react';
 import { Navigate, Route, Routes as CommonRoutes } from 'react-router-dom';
 import SignIn from '../components/auth/sign-in';
 import SignUp from '../components/auth/sign-up';
-import { Main, Languages, Translations, Users } from '../components/pages';
+import { Languages, Translations, Users } from '../components/pages';
 import useAuthorized from '../hooks/use-authorized.hook';
 import { type RouteInterface } from './interfaces/route.interface';
 import { RouteEnum } from './enums/route.enum';
 import Verify from '../components/auth/verify';
+import Profile from '../components/pages/profile/profile';
+import PasswordRecovery from '../components/auth/password-recovery';
+import EditEmailTemplate from '../components/pages/email-templates/edit-email-template/edit-email-template';
 
 const DEFAULT_REDIRECT: string = RouteEnum.SIGN_IN;
 
@@ -30,8 +33,14 @@ const routes: RouteInterface[] = [
     redirectTo: RouteEnum.MAIN,
   },
   {
+    path: RouteEnum.PASSWORD_RECOVERY,
+    Component: PasswordRecovery,
+    notAuthOnly: true,
+    redirectTo: RouteEnum.MAIN,
+  },
+  {
     path: RouteEnum.MAIN,
-    Component: Main,
+    Component: Users,
     authOnly: true,
   },
   {
@@ -47,6 +56,16 @@ const routes: RouteInterface[] = [
   {
     path: RouteEnum.USERS,
     Component: Users,
+    authOnly: true,
+  },
+  {
+    path: RouteEnum.PROFILE,
+    Component: Profile,
+    authOnly: true,
+  },
+  {
+    path: RouteEnum.EDIT_EMAIL_TEMPLATE,
+    Component: EditEmailTemplate,
     authOnly: true,
   },
 ];

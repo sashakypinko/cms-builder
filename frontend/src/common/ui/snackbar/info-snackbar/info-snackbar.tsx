@@ -2,7 +2,7 @@ import { type ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Snackbar as MuiSnackbar } from '@mui/material';
 import { selectInfoSnackbar } from '../../../../store/selectors';
-import { clearSnackbar } from '../../../../store/actions/ui';
+import { clearSnackbar } from '../../../../store/ui/slice';
 
 const InfoSnackbar = (): ReactElement => {
   const dispatch = useDispatch();

@@ -4,7 +4,7 @@ import {
   showErrorSnackbar,
   showInfoSnackbar,
   showSuccessSnackbar,
-} from '../store/actions/ui';
+} from '../store/ui/slice';
 
 interface SnackbarFunctions {
   successSnackbar: (message: string) => void;

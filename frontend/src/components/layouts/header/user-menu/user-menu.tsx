@@ -1,15 +1,31 @@
 import { type MouseEvent, type ReactElement, useState } from 'react';
-import { Avatar, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
+import {
+  Avatar as AvatarIcon,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  styled,
+  Tooltip,
+} from '@mui/material';
 import { Logout, Settings } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../../../store/actions/auth';
-import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../../store/auth/slice';
+import { useTranslation } from 'react-i18next';
+import { RouteEnum } from '../../../../routes/enums/route.enum';
+import Link from '../../../../common/ui/link';
+import { replaceParamsInReactUrl } from '../../../../helpers/url.helper';
+import { selectAuthUser } from '../../../../store/selectors';
+import Avatar from '../../../../common/ui/avatar';
 
 const UserMenu = (): ReactElement => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const user = useSelector(selectAuthUser);
+
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,12 +48,7 @@ const UserMenu = (): ReactElement => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar
-            sx={{
-              width: 32,
-              height: 32,
-            }}
-          />
+          <Avatar src={user?.avatar as string | null} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -80,10 +91,12 @@ const UserMenu = (): ReactElement => {
           vertical: 'bottom',
         }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar />
-          {t('profile.my-profile')}
-        </MenuItem>
+        <Link to={replaceParamsInReactUrl(RouteEnum.PROFILE, { id: user?._id })}>
+          <MenuItem sx={{ gap: 2 }} onClick={handleClose}>
+            <Avatar src={user?.avatar as string | null} />
+            {t('profile.my-profile')}
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>

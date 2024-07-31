@@ -1,20 +1,27 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, PayloadAction } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-// import logger from "redux-logger";
-import reducer from './rootReducer';
-import rootSaga from './sagas';
+
+import rootReducers from './root-reducer';
+import rootSaga from './root-saga';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
-  reducer,
+  reducer: rootReducers,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActionPaths: ['meta'],
+        ignoredActionPaths: ['payload.onSuccess', 'payload.onError'],
       },
     }).prepend(sagaMiddleware),
-  // .concat(logger),
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export type ActionMeta = {
+  onSuccess?: () => void;
+  onError?: (errors: any) => void;
+};
+export type ActionWithMeta<T> = PayloadAction<T, string, ActionMeta>;
 
 sagaMiddleware.run(rootSaga);

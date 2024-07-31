@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import Button from '../button';
 
 export interface ConfirmationDialogProps {
   open: boolean;

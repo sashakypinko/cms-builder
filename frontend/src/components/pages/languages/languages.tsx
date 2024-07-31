@@ -1,119 +1,115 @@
-import { type ReactElement, useMemo, useState } from 'react'
-import { Chip, Container, Grid, Switch } from '@mui/material'
-import Table from '../../../common/ui/table'
-import { useTranslation } from 'react-i18next'
-import { DeleteRounded, EditRounded, TranslateRounded } from '@mui/icons-material'
-import { type TableCell } from '../../../common/ui/table/table'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectLanguages } from '../../../store/selectors'
-import { type TableAction } from '../../../common/ui/table/table-actions-toolbar/table-actions-toolbar'
-import LanguageFormModal from './language-form-modal'
-import { type ILanguage } from '../../../services/api/language/dto/language.dto'
-import { createLanguage, deleteLanguages, updateLanguage } from '../../../store/actions/languages'
-import { type FormikHelpers } from 'formik'
-import useSnackbar from '../../../hooks/use-snackbar.hook'
-import useConfirmation from '../../../hooks/use-confirmation.hook'
-import { HttpStatusCode } from 'axios'
-import { makeErrorsObjectFromResponse } from '../../../helpers/validation-helpers'
-import { type ActionCreatorWithMeta } from '../../../store/actions/action-creator-types'
+import { type ReactElement, useMemo, useState } from 'react';
+import { Chip, Container, Grid, Switch } from '@mui/material';
+import Table from '../../../common/ui/table';
+import { useTranslation } from 'react-i18next';
+import { DeleteRounded, EditRounded, TranslateRounded } from '@mui/icons-material';
+import { type TableCell } from '../../../common/ui/table/table';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLanguages } from '../../../store/selectors';
+import { type TableAction } from '../../../common/ui/table/table-actions-toolbar/table-actions-toolbar';
+import LanguageFormModal from './language-form-modal';
+import { type ILanguage } from '../../../services/api/language/dto/language.dto';
+import { createLanguage, deleteLanguage, updateLanguage } from '../../../store/languages/slice';
+import { type FormikHelpers } from 'formik';
+import useSnackbar from '../../../hooks/use-snackbar.hook';
+import useConfirmation from '../../../hooks/use-confirmation.hook';
+import { HttpStatusCode } from 'axios';
+import { makeErrorsObjectFromResponse } from '../../../helpers/validation-helpers';
+import { ActionWithMeta } from '../../../store/store';
 
 const Languages = (): ReactElement => {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const { languages, loading } = useSelector(selectLanguages)
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { languages, loading } = useSelector(selectLanguages);
 
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [editableLanguage, setEditableLanguage] = useState<ILanguage | null>(null)
-  const { successSnackbar, errorSnackbar } = useSnackbar()
-  const { Confirmation, showConfirmation } = useConfirmation()
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [editableLanguage, setEditableLanguage] = useState<ILanguage | null>(null);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
+  const { Confirmation, showConfirmation } = useConfirmation();
 
   const handleModalClose = (): void => {
-    setEditableLanguage(null)
-    setModalOpen(false)
-  }
+    setEditableLanguage(null);
+    setModalOpen(false);
+  };
 
   const handleSaveLanguage = (
     language: ILanguage,
-    {
-      resetForm,
-      setSubmitting,
-      setErrors
-    }: FormikHelpers<ILanguage>,
+    { resetForm, setSubmitting, setErrors }: FormikHelpers<ILanguage>,
   ): void => {
-    const isNew: boolean = editableLanguage === null
-    const saveAction: ActionCreatorWithMeta = isNew ? createLanguage : updateLanguage
+    const isNew: boolean = editableLanguage === null;
+    const saveAction = isNew ? createLanguage : updateLanguage;
     dispatch(
-      saveAction(
+      saveAction({
         language,
-        () => {
-          handleModalClose()
-          resetForm()
-          successSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.success`))
+        onSuccess: () => {
+          handleModalClose();
+          resetForm();
+          successSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.success`));
         },
-        (error) => {
-          setSubmitting(false)
+        onError: (error) => {
+          setSubmitting(false);
           if (error?.statusCode === HttpStatusCode.UnprocessableEntity) {
-            setErrors(makeErrorsObjectFromResponse(t, error.errors))
+            setErrors(makeErrorsObjectFromResponse(t, error.errors));
           }
-          errorSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.error`))
+          errorSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.error`));
         },
-      ),
-    )
-  }
+      }),
+    );
+  };
 
   const handleUpdateLanguageStatus = (language: ILanguage): void => {
     dispatch(
-      updateLanguage(
-        {
+      updateLanguage({
+        language: {
           ...language,
           isActive: !language.isActive,
         },
-        () => {
-          successSnackbar(t('languages.change-status.success'))
+        onSuccess: () => {
+          successSnackbar(t('languages.change-status.success'));
         },
-        () => {
-          errorSnackbar(t('languages.change-status.error'))
+        onError: () => {
+          errorSnackbar(t('languages.change-status.error'));
         },
-      ),
-    )
-  }
+      }),
+    );
+  };
 
   const handleDeleteLanguages = (selectedLanguages: ILanguage[]): void => {
     showConfirmation({
       text: t('delete-confirmation'),
       onConfirm: () => {
         dispatch(
-          deleteLanguages(
-            selectedLanguages.map(({ _id }) => _id),
-            () => {
-              successSnackbar(t('languages.delete.success'))
+          deleteLanguage({
+            ids: selectedLanguages.map(({ _id }) => _id || ''),
+            onSuccess: () => {
+              successSnackbar(t('languages.delete.success'));
             },
-            () => {
-              errorSnackbar(t('languages.delete.error'))
+            onError: () => {
+              errorSnackbar(t('languages.delete.error'));
             },
-          ),
-        )
+          }),
+        );
       },
-    })
-  }
+    });
+  };
 
   const cells: TableCell[] = useMemo(() => {
     const maxTranslationKeys = languages.reduce(
       (max, current) => {
         if (current.translations.length > max.translations.length) {
-          return current
+          return current;
         }
-        return max
+        return max;
       },
       { translations: [] },
-    ).translations.length
+    ).translations.length;
 
     return [
       {
         field: 'name',
         label: t('name'),
         fieldValue: ({ code }) => t(`languages.${code}`),
-        render: ({ code }) => t(`languages.${code}`)
+        render: ({ code }) => t(`languages.${code}`),
       },
       {
         field: 'code',
@@ -126,7 +122,7 @@ const Languages = (): ReactElement => {
           <Switch
             checked={language.isActive}
             onClick={() => {
-              handleUpdateLanguageStatus(language)
+              handleUpdateLanguageStatus(language);
             }}
             disabled={loading}
           />
@@ -140,20 +136,20 @@ const Languages = (): ReactElement => {
             label={`${translations.length}/${maxTranslationKeys}`}
             variant="outlined"
             color={translations.length < maxTranslationKeys ? 'warning' : 'success'}
-            icon={<TranslateRounded/>}
+            icon={<TranslateRounded />}
           />
         ),
       },
-    ]
-  }, [languages])
+    ];
+  }, [languages]);
 
   const actions: TableAction[] = [
     {
       tooltip: t('edit'),
       Icon: EditRounded,
       onClick: (value: ILanguage): void => {
-        setEditableLanguage(value)
-        setModalOpen(true)
+        setEditableLanguage(value);
+        setModalOpen(true);
       },
     },
     {
@@ -162,25 +158,23 @@ const Languages = (): ReactElement => {
       multiple: true,
       onClick: handleDeleteLanguages,
     },
-  ]
+  ];
 
   return (
     <>
       {Confirmation}
-      <Container maxWidth="xl">
-        <Grid sx={{ mt: 10 }} container>
-          <Table
-            title={t('languages')}
-            cells={cells}
-            rows={languages}
-            actions={actions}
-            keyField="_id"
-            loading={loading}
-            onAddClick={() => {
-              setModalOpen(true)
-            }}
-          />
-        </Grid>
+      <Container sx={{ mt: 10 }} maxWidth="xl">
+        <Table
+          title={t('languages')}
+          cells={cells}
+          rows={languages}
+          actions={actions}
+          keyField="_id"
+          loading={loading}
+          onAddClick={() => {
+            setModalOpen(true);
+          }}
+        />
       </Container>
       <LanguageFormModal
         open={modalOpen}
@@ -189,7 +183,7 @@ const Languages = (): ReactElement => {
         handleClose={handleModalClose}
       />
     </>
-  )
-}
+  );
+};
 
-export default Languages
+export default Languages;

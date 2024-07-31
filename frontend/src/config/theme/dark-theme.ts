@@ -5,7 +5,7 @@ const darkTheme = createTheme({
   palette: {
     mode: ThemeEnum.DARK_MODE,
     primary: {
-      main: '#9155fd',
+      main: '#626262',
     },
     secondary: {
       main: '#414141',
@@ -14,8 +14,11 @@ const darkTheme = createTheme({
       main: '#ff4c51',
     },
     background: {
-      default: '#28243d',
-      paper: '#312d4b',
+      default: '#202021',
+      paper: '#232323',
+    },
+    text: {
+      primary: '#fff',
     },
   },
 });

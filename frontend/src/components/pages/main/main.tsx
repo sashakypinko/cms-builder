@@ -1,7 +1,7 @@
 import { type ReactElement } from 'react';
 import { Container, Grid, IconButton, Typography } from '@mui/material';
 import { CheckCircleOutlineOutlined, ErrorOutlineOutlined, InfoOutlined } from '@mui/icons-material';
-import useSnackbar from '../../../hooks/use-snackbar.hook'
+import useSnackbar from '../../../hooks/use-snackbar.hook';
 
 const Main = (): ReactElement => {
   const { successSnackbar, errorSnackbar, infoSnackbar } = useSnackbar();

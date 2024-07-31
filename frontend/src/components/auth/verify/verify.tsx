@@ -7,17 +7,19 @@ import Card from '../../../common/ui/card';
 import useQuery from '../../../hooks/use-query.hook';
 import Link from '../../../common/ui/link';
 import { RouteEnum } from '../../../routes/enums/route.enum';
-import { verify } from '../../../store/actions/auth';
 import { selectAuth } from '../../../store/selectors';
+import { emailVerify } from '../../../store/auth/slice';
 
 const Verify = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { code } = useQuery();
+  const {
+    params: { code },
+  } = useQuery();
   const { loading, error } = useSelector(selectAuth);
 
   useEffect(() => {
-    dispatch(verify(code));
+    dispatch(emailVerify(code));
   }, [code]);
 
   return (
@@ -27,13 +29,13 @@ const Verify = () => {
           {t(loading ? 'auth.verify.in-progress' : error ? 'auth.verify.error' : 'auth.verify.success')}
         </Typography>
         <Box sx={{ mt: 1 }}>
-          {
-            loading
-              ? <CircularProgress sx={{m: 3}} size={200} color="inherit" />
-              : error
-                ? <HighlightOffRounded sx={{m: 3, fontSize: 200}} color="error"/>
-                : <CheckCircleOutlineRounded sx={{m: 3, fontSize: 200}} color="success"/>
-          }
+          {loading ? (
+            <CircularProgress sx={{ m: 3 }} size={200} color="inherit" />
+          ) : error ? (
+            <HighlightOffRounded sx={{ m: 3, fontSize: 200 }} color="error" />
+          ) : (
+            <CheckCircleOutlineRounded sx={{ m: 3, fontSize: 200 }} color="success" />
+          )}
         </Box>
         <Grid container>
           <Grid item>

@@ -21,7 +21,7 @@ const validationSchema = (t: TFunction) =>
 interface Props {
   open: boolean;
   language: ILanguage | null;
-  handleSave: (language: ILanguage, { resetForm, setSubmitting, setErrors}: FormikHelpers<ILanguage>) => void;
+  handleSave: (language: ILanguage, { resetForm, setSubmitting, setErrors }: FormikHelpers<ILanguage>) => void;
   handleClose: () => void;
 }
 
@@ -29,7 +29,11 @@ const LanguageFormModal = ({ open, language, handleClose, handleSave }: Props): 
   const { t } = useTranslation();
 
   return (
-    <Modal title={t(language != null ? 'languages.update.title' : 'languages.create.title')} open={open} onClose={handleClose}>
+    <Modal
+      title={t(language != null ? 'languages.update.title' : 'languages.create.title')}
+      open={open}
+      onClose={handleClose}
+    >
       <Formik
         initialValues={language || languageInitialValues}
         onSubmit={handleSave}

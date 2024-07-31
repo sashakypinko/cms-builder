@@ -17,6 +17,7 @@ import { ThemeEnum } from '../../../config/theme/enums/theme.enum';
 import { ColorModeContext } from '../../../config/theme/context/color-mode.context';
 import { SidebarContext } from '../sidebar/context/sidebar.context';
 import LanguageSelector from './language-selector';
+import NotificationsPopup from './notifications-popup';
 
 const drawerWidth = 240;
 
@@ -73,7 +74,10 @@ const Header = (): ReactElement => {
             )}
           </IconButton>
           {isAuthorised ? (
-            <UserMenu />
+            <>
+              <NotificationsPopup />
+              <UserMenu />
+            </>
           ) : (
             <Link to={RouteEnum.SIGN_IN}>
               <IconButton sx={{ color: theme.palette.background.default }}>

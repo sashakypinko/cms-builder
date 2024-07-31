@@ -3,4 +3,5 @@ export interface ILanguage {
   code: string;
   isActive: boolean;
   translations: any;
+  isMain?: boolean;
 }

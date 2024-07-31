@@ -3,25 +3,18 @@ import Modal from '../../../../common/ui/modal';
 import { useTranslation } from 'react-i18next';
 import { type TFunction } from 'i18next';
 import * as Yup from 'yup';
-import { Formik, FormikHelpers } from 'formik'
+import { Formik, FormikHelpers } from 'formik';
 import TranslationFormContent from './translation-form-content';
-import { ParsedTranslation } from '../../../../store/utils/prepare-languages-request.util'
+import { ParsedTranslation } from '../../../../store/utils/prepare-languages-request.util';
 
 interface Props {
   open: boolean;
-  handleSave: (translation: ParsedTranslation, {
-    resetForm,
-    setSubmitting
-  }: FormikHelpers<ParsedTranslation>) => void;
+  handleSave: (translation: ParsedTranslation, { resetForm, setSubmitting }: FormikHelpers<ParsedTranslation>) => void;
   handleClose: () => void;
 }
 
-const TranslationFormModal = ({
-  open,
-  handleClose,
-  handleSave
-}: Props): ReactElement => {
-  const { t } = useTranslation()
+const TranslationFormModal = ({ open, handleClose, handleSave }: Props): ReactElement => {
+  const { t } = useTranslation();
 
   const translationInitialValues: ParsedTranslation = {
     key: '',

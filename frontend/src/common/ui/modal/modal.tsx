@@ -24,12 +24,7 @@ interface ModalProps {
 }
 
 const Modal = ({ title, open, onClose, children }: ModalProps): ReactElement => (
-  <Dialog
-    open={open}
-    TransitionComponent={Transition}
-    keepMounted
-    onClose={onClose}
-  >
+  <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={onClose}>
     <DialogTitle>{title}</DialogTitle>
     <Divider />
     <DialogContent>{children}</DialogContent>

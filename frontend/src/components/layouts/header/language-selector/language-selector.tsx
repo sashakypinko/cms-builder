@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { selectLanguages } from '../../../../store/selectors';
 import { type ILanguage } from '../../../../services/api/language/dto/language.dto';
 import { AuthStorage } from '../../../../services/storage/auth.storage';
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 
 const LanguageSelector = (): ReactElement => {
   const theme = useTheme();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { languages, loading } = useSelector(selectLanguages);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

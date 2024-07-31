@@ -1,9 +1,9 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthRequestDto {
-    @ApiProperty()
-    readonly email: string;
+  @ApiProperty()
+  readonly email: string;
 
-    @ApiProperty()
-    readonly password: string;
+  @ApiProperty()
+  readonly password: string;
 }

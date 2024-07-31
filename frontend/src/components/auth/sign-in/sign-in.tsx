@@ -2,7 +2,7 @@ import { type ReactElement } from 'react';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { type SignInRequestDto } from '../../../services/api/auth/dto/sign-in-request.dto';
-import { signIn } from '../../../store/actions/auth';
+import { signIn } from '../../../store/auth/slice';
 import { RouteEnum } from '../../../routes/enums/route.enum';
 import Card from '../../../common/ui/card';
 import { type TFunction } from 'i18next';
@@ -13,6 +13,7 @@ import SignInFormContent from './sign-in-form-content';
 import Link from '../../../common/ui/link';
 import useSnackbar from '../../../hooks/use-snackbar.hook';
 import { HttpStatusCode } from 'axios';
+import EmailTemplateEditor from '../../email-template-editor';
 
 const signInInitialValues: SignInRequestDto = {
   email: '',
@@ -37,14 +38,18 @@ const SignIn = (): ReactElement => {
     { resetForm, setSubmitting, setErrors }: FormikHelpers<SignInRequestDto>,
   ) => {
     dispatch(
-      signIn(values, resetForm, ({ statusCode, error } = {}) => {
-        if (statusCode === HttpStatusCode.BadRequest) {
-          setErrors({
-            email: t(`validation.${error}`),
-          });
-        }
-        setSubmitting(false);
-        errorSnackbar(t('auth.sign-in.sign-in-error'));
+      signIn({
+        data: values,
+        onSuccess: resetForm,
+        onError: ({ statusCode, error } = {}) => {
+          if (statusCode === HttpStatusCode.BadRequest) {
+            setErrors({
+              email: t(`validation.${error}`),
+            });
+          }
+          setSubmitting(false);
+          errorSnackbar(t('auth.sign-in.sign-in-error'));
+        },
       }),
     );
   };
@@ -66,7 +71,7 @@ const SignIn = (): ReactElement => {
           </Formik>
           <Grid container>
             <Grid item xs>
-              <Link to={RouteEnum.SIGN_UP}>{t('auth.sign-in.forgot')}</Link>
+              <Link to={RouteEnum.PASSWORD_RECOVERY}>{t('auth.sign-in.forgot')}</Link>
             </Grid>
             <Grid item>
               <Link to={RouteEnum.SIGN_UP}>{t('auth.sign-in.sign-up-link')}</Link>

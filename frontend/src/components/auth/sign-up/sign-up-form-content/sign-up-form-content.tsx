@@ -1,11 +1,12 @@
 import { type ReactElement } from 'react';
-import { Button, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { PersonAdd } from '@mui/icons-material';
 import { Form, useFormikContext } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { type SignUpRequestDto } from '../../../../services/api/auth/dto/sign-up-request.dto';
 import TextField from '../../../../common/ui/text-field';
 import PasswordField from '../../../../common/ui/password-field';
+import Button from '../../../../common/ui/button';
 
 const SignUpFormContent = (): ReactElement => {
   const { isSubmitting } = useFormikContext<SignUpRequestDto>();

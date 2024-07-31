@@ -2,7 +2,7 @@ import { TFunction } from 'i18next';
 
 export const makeErrorsObjectFromResponse = <T extends Record<string, { key: string }>>(
   t: TFunction,
-  errors: T
+  errors: T,
 ): Record<keyof T, string> => {
   const result: Partial<Record<keyof T, string>> = {};
 

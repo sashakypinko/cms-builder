@@ -1,13 +1,19 @@
-import { type AppState } from './rootReducer';
 import { type IUser } from '../services/api/user/dto/user.dto';
+import { type RootState } from './store';
+import { NotificationsState } from './notifications/types';
+import { AuthState } from './auth/types';
+import { UsersState } from './users/types';
+import { LanguagesState } from './languages/types';
 
-export const selectAuthUser = (state: AppState): IUser | undefined => state.auth.authData?.user;
-export const selectAuth = (state: AppState): App.Store.Auth => state.auth;
+export const selectAuthUser = (state: RootState): IUser | null => state.auth.authUser;
+export const selectAuth = (state: RootState): AuthState => state.auth;
 
-export const selectLanguages = (state: AppState): App.Store.Languages => state.languages;
+export const selectLanguages = (state: RootState): LanguagesState => state.languages;
 
-export const selectUsers = (state: AppState): App.Store.Users => state.users;
+export const selectUsers = (state: RootState): UsersState => state.users;
 
-export const selectSuccessSnackbar = (state: AppState): string => state.ui.successSnackbar;
-export const selectErrorSnackbar = (state: AppState): string => state.ui.errorSnackbar;
-export const selectInfoSnackbar = (state: AppState): string => state.ui.infoSnackbar;
+export const selectNotifications = (state: RootState): NotificationsState => state.notifications;
+
+export const selectSuccessSnackbar = (state: RootState): string => state.ui.successSnackbar;
+export const selectErrorSnackbar = (state: RootState): string => state.ui.errorSnackbar;
+export const selectInfoSnackbar = (state: RootState): string => state.ui.infoSnackbar;

@@ -19,7 +19,8 @@ declare namespace App {
     }
 
     export interface Notifications {
-      notifications: any;
+      notifications: INotification[];
+      loading: boolean;
       error: unknown;
     }
 

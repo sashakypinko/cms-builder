@@ -44,6 +44,16 @@ class AuthStorageService extends StorageService {
   };
 
   getLanguage = (): string | undefined => this.get('lang');
+
+  storeLastCodeSendTime = (time: number): void => {
+    this.store('lastCodeSendTime', time);
+  };
+
+  getLastCodeSendTime = (): number | null => this.get('lastCodeSendTime');
+
+  removeLastCodeSendTime = (): void => {
+    this.remove('lastCodeSendTime');
+  };
 }
 
 export const AuthStorage = new AuthStorageService();

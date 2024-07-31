@@ -5,10 +5,10 @@ const lightTheme = createTheme({
   palette: {
     mode: ThemeEnum.LIGHT_MODE,
     primary: {
-      main: '#9155fd',
+      main: '#3c3c3c',
     },
     secondary: {
-      main: '#1e88e5',
+      main: '#fff',
     },
     error: {
       main: '#ff4c51',

@@ -12,14 +12,7 @@ import {
   type Theme,
   useTheme,
 } from '@mui/material';
-import {
-  ChevronLeft,
-  ChevronRight,
-  DashboardRounded,
-  TranslateRounded,
-  LanguageRounded,
-  PeopleRounded
-} from '@mui/icons-material'
+import { ChevronLeft, ChevronRight, TranslateRounded, LanguageRounded, PeopleRounded } from '@mui/icons-material';
 import { type FC, useContext } from 'react';
 import { SidebarContext } from './context/sidebar.context';
 import useAuthorized from '../../../hooks/use-authorized.hook';
@@ -74,11 +67,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const sidebarLinks: Array<{ label: string; link: string; Icon: FC }> = [
-  {
-    label: 'sidebar.main',
-    link: RouteEnum.MAIN,
-    Icon: DashboardRounded,
-  },
+  // {
+  //   label: 'sidebar.main',
+  //   link: RouteEnum.MAIN,
+  //   Icon: DashboardRounded,
+  // },
   {
     label: 'sidebar.users',
     link: RouteEnum.USERS,

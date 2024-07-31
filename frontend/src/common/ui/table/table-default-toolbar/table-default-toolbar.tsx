@@ -1,4 +1,4 @@
-import { type ReactElement, ReactNode } from 'react'
+import { type ReactElement, ReactNode } from 'react';
 import { IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { AddCircleOutlineRounded } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +37,7 @@ const TableDefaultToolbar = ({
       <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
         {title}
       </Typography>
-      {tools.map(tool => tool)}
+      {tools.map((tool) => tool)}
       {onAddClick != null && (
         <Tooltip title={t('table.add-new')}>
           <IconButton onClick={onAddClick}>

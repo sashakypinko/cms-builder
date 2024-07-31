@@ -1,15 +1,19 @@
-import { Role } from '../components/pages/users/enums/role.enum'
-import { useSelector } from 'react-redux'
-import { selectAuthUser } from '../store/selectors'
+import { Role } from '../components/pages/users/enums/role.enum';
+import { useSelector } from 'react-redux';
+import { selectAuthUser } from '../store/selectors';
+import { useCallback } from 'react';
 
 const useUserRole = () => {
-  const user = useSelector(selectAuthUser);
+  const authUser = useSelector(selectAuthUser);
 
-  const hasRole = (role: Role) => {
-    return user?.role === role;
-  };
+  const hasRole = useCallback(
+    (role: Role) => {
+      return authUser?.role === role;
+    },
+    [authUser],
+  );
 
-  return { hasRole }
+  return { authUser, hasRole };
 };
 
 export default useUserRole;

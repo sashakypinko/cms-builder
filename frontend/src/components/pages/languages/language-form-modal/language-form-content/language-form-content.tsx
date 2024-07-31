@@ -3,7 +3,8 @@ import { Form, useFormikContext } from 'formik';
 import { type SignUpRequestDto } from '../../../../../services/api/auth/dto/sign-up-request.dto';
 import { useTranslation } from 'react-i18next';
 import TextField from '../../../../../common/ui/text-field';
-import { Button, CircularProgress, styled } from '@mui/material';
+import { CircularProgress, styled } from '@mui/material';
+import Button from '../../../../../common/ui/button';
 
 const Actions = styled('div')(() => ({
   display: 'flex',

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { Formik, type FormikHelpers } from 'formik';
 import { HttpStatusCode } from 'axios';
-import { signUp } from '../../../store/actions/auth';
+import { signUp } from '../../../store/auth/slice';
 import { type SignUpRequestDto } from '../../../services/api/auth/dto/sign-up-request.dto';
 import Card from '../../../common/ui/card';
 import { RouteEnum } from '../../../routes/enums/route.enum';
@@ -47,36 +47,30 @@ const validationSchema = (t: TFunction) =>
 const SignUp = (): ReactElement => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const {
-    successSnackbar,
-    errorSnackbar
-  } = useSnackbar();
+  const { successSnackbar, errorSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const handleSubmit = (
     values: SignUpRequestDto,
-    {
-      resetForm,
-      setSubmitting,
-      setErrors
-    }: FormikHelpers<SignUpRequestDto>,
+    { resetForm, setSubmitting, setErrors }: FormikHelpers<SignUpRequestDto>,
   ) => {
     dispatch(
-      signUp(values, () => {
-        resetForm();
-        successSnackbar(t('auth.sign-up.success'));
-        navigate(RouteEnum.SIGN_IN);
-      }, ({
-        statusCode,
-        error
-      } = {}) => {
-        if (statusCode === HttpStatusCode.BadRequest) {
-          setErrors({
-            email: t(`validation.${error}`),
-          });
-        }
-        setSubmitting(false);
-        errorSnackbar(t('auth.sign-up.error'));
+      signUp({
+        data: values,
+        onSuccess: () => {
+          resetForm();
+          successSnackbar(t('auth.sign-up.success'));
+          navigate(RouteEnum.SIGN_IN);
+        },
+        onError: ({ statusCode, error } = {}) => {
+          if (statusCode === HttpStatusCode.BadRequest) {
+            setErrors({
+              email: t(`validation.${error}`),
+            });
+          }
+          setSubmitting(false);
+          errorSnackbar(t('auth.sign-up.error'));
+        },
       }),
     );
   };
@@ -94,7 +88,7 @@ const SignUp = (): ReactElement => {
             validationSchema={validationSchema(t)}
             validateOnBlur
           >
-            <SignUpFormContent/>
+            <SignUpFormContent />
           </Formik>
         </Box>
         <Grid container>

@@ -8,17 +8,24 @@ import useSnackbar from '../../../hooks/use-snackbar.hook';
 import useConfirmation from '../../../hooks/use-confirmation.hook';
 import {
   AdminPanelSettingsRounded,
-  DeleteRounded, NewReleasesRounded,
+  DeleteRounded,
+  NewReleasesRounded,
   PersonOffRounded,
   PersonRounded,
+  RemoveRedEyeRounded,
   SettingsRounded,
-  SvgIconComponent, VerifiedRounded
+  SvgIconComponent,
+  VerifiedRounded,
 } from '@mui/icons-material';
 import { selectUsers } from '../../../store/selectors';
-import { activateUser, deactivateUser, getUsers } from '../../../store/actions/users';
+import { activateUser, deactivateUser, deleteUser, getUsers } from '../../../store/users/slice';
 import { Role } from './enums/role.enum';
 import { IUser } from '../../../services/api/user/dto/user.dto';
 import useUserRole from '../../../hooks/use-user-role.hook';
+import Link from '../../../common/ui/link';
+import { replaceParamsInReactUrl } from '../../../helpers/url.helper';
+import { RouteEnum } from '../../../routes/enums/route.enum';
+import Avatar from '../../../common/ui/avatar';
 
 type RoleIcons = {
   [key in Role]: SvgIconComponent;
@@ -26,7 +33,7 @@ type RoleIcons = {
 
 type RoleColors = {
   [key in Role]: 'success' | 'info';
-}
+};
 
 const roleIcons: RoleIcons = {
   [Role.ADMIN]: AdminPanelSettingsRounded,
@@ -41,19 +48,10 @@ const roleColors: RoleColors = {
 const Users = (): ReactElement => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const {
-    users,
-    loading
-  } = useSelector(selectUsers);
-  const {
-    successSnackbar,
-    errorSnackbar
-  } = useSnackbar();
-  const {
-    Confirmation,
-    showConfirmation
-  } = useConfirmation();
-  const { hasRole } = useUserRole();
+  const { users, loading } = useSelector(selectUsers);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
+  const { Confirmation, showConfirmation } = useConfirmation();
+  const { authUser, hasRole } = useUserRole();
 
   useEffect(() => {
     dispatch(getUsers());
@@ -65,13 +63,17 @@ const Users = (): ReactElement => {
         text: t('users.activate-confirmation'),
         onConfirm: () => {
           dispatch(
-            activateUser(id, () => {
-              successSnackbar(t('users.activate.success'));
-            }, () => {
-              errorSnackbar(t('translations.activate.error'));
-            })
+            activateUser({
+              id,
+              onSuccess: () => {
+                successSnackbar(t('users.activate.success'));
+              },
+              onError: () => {
+                errorSnackbar(t('translations.activate.error'));
+              },
+            }),
           );
-        }
+        },
       });
     } else {
       errorSnackbar(t('no-action-permission'));
@@ -84,22 +86,41 @@ const Users = (): ReactElement => {
         text: t('users.deactivate-confirmation'),
         onConfirm: () => {
           dispatch(
-            deactivateUser(id, () => {
-              successSnackbar(t('users.deactivate.success'));
-            }, () => {
-              errorSnackbar(t('translations.deactivate.error'));
-            })
+            deactivateUser({
+              id,
+              onSuccess: () => {
+                successSnackbar(t('users.deactivate.success'));
+              },
+              onError: () => {
+                errorSnackbar(t('translations.deactivate.error'));
+              },
+            }),
           );
-        }
+        },
       });
     } else {
       errorSnackbar(t('no-action-permission'));
     }
   };
 
-  const deleteUser = () => {
+  const handleDeleteUser = (id: string) => {
     if (hasRole(Role.ADMIN)) {
-      console.log('deleteUser');
+      showConfirmation({
+        text: t('users.delete-confirmation'),
+        onConfirm: () => {
+          dispatch(
+            deleteUser({
+              id,
+              onSuccess: () => {
+                successSnackbar(t('users.delete.success'));
+              },
+              onError: () => {
+                errorSnackbar(t('translations.delete.error'));
+              },
+            }),
+          );
+        },
+      });
     } else {
       errorSnackbar(t('no-action-permission'));
     }
@@ -107,6 +128,11 @@ const Users = (): ReactElement => {
 
   const cells: TableCell[] = useMemo(() => {
     return [
+      {
+        field: 'avatar',
+        label: '',
+        render: ({ avatar }: IUser) => <Avatar src={avatar as string | null} />,
+      },
       {
         field: 'firstName',
         label: t('first-name'),
@@ -124,22 +150,15 @@ const Users = (): ReactElement => {
         label: t('role'),
         render: ({ role }: IUser): ReactElement => {
           const Icon = roleIcons[role];
-          return (
-            <Chip
-              label={t(`roles.${role}`)}
-              variant="outlined"
-              color={roleColors[role]}
-              icon={<Icon/>}
-            />
-          );
-        }
+          return <Chip label={t(`roles.${role}`)} variant="outlined" color={roleColors[role]} icon={<Icon />} />;
+        },
       },
       {
         field: 'verified',
         label: t('users.verify'),
         render: ({ verified }: IUser): ReactElement => {
-            return verified ? <VerifiedRounded color="success"/> : <NewReleasesRounded color="disabled" />;
-        }
+          return verified ? <VerifiedRounded color="success" /> : <NewReleasesRounded color="disabled" />;
+        },
       },
       {
         field: 'isActive',
@@ -147,45 +166,45 @@ const Users = (): ReactElement => {
         render: ({ _id, isActive }: IUser): ReactElement => {
           if (isActive) {
             return (
-              <IconButton onClick={() => handleDeactivateUser(_id)}>
-                <PersonRounded color="success"/>
+              <IconButton onClick={() => handleDeactivateUser(_id || '')} disabled={!hasRole(Role.ADMIN)}>
+                <PersonRounded color="success" />
               </IconButton>
             );
           }
           return (
-            <IconButton onClick={() => handleActivateUser(_id)}>
-              <PersonOffRounded color="disabled"/>
+            <IconButton onClick={() => handleActivateUser(_id || '')} disabled={!hasRole(Role.ADMIN)}>
+              <PersonOffRounded color="disabled" />
             </IconButton>
           );
-        }
+        },
       },
       {
         field: 'actions',
         label: t('actions'),
-        render: (row: IUser): ReactElement => {
+        render: ({ _id }: IUser): ReactElement => {
           return (
-            <IconButton onClick={deleteUser}>
-              <DeleteRounded/>
-            </IconButton>
+            <>
+              <Link to={replaceParamsInReactUrl(RouteEnum.PROFILE, { id: _id })}>
+                <IconButton disabled={!hasRole(Role.ADMIN)}>
+                  <RemoveRedEyeRounded />
+                </IconButton>
+              </Link>
+              <IconButton onClick={() => handleDeleteUser(_id || '')} disabled={!hasRole(Role.ADMIN)}>
+                <DeleteRounded />
+              </IconButton>
+            </>
           );
-        }
+        },
       },
     ];
-  }, []);
+  }, [authUser]);
 
   return (
     <>
       {Confirmation}
       <Container maxWidth="xl">
         <Grid sx={{ mt: 10 }} container>
-          <Table
-            keyField="_id"
-            title={t('users')}
-            cells={cells}
-            rows={users}
-            loading={loading}
-            selectable={false}
-          />
+          <Table keyField="_id" title={t('users')} cells={cells} rows={users} loading={loading} selectable={false} />
         </Grid>
       </Container>
     </>
