@@ -4,7 +4,7 @@ import { type IUser } from './dto/user.dto';
 class UserApiService extends ApiService {
   getAll = async (): Promise<IUser[]> => await this.get('').then((res) => res.data);
 
-  deleteById = async (id: string): Promise<IUser> => await this.get(id).then((res) => res.data);
+  deleteById = async (id: string): Promise<IUser> => await this.delete(id).then((res) => res.data);
 
   update = async (id: string, data: IUser): Promise<IUser> => await this.put(id, data, false).then((res) => res.data);
 

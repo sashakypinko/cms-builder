@@ -2,6 +2,7 @@ import notificationsReducer from './notifications/slice';
 import authReducer from './auth/slice';
 import usersReducer from './users/slice';
 import languagesReducer from './languages/slice';
+import pagesReducer from './pages/slice';
 import uiReducer from './ui/slice';
 
 const rootReducers = {
@@ -9,6 +10,7 @@ const rootReducers = {
   users: usersReducer,
   languages: languagesReducer,
   notifications: notificationsReducer,
+  pages: pagesReducer,
   ui: uiReducer,
 };
 

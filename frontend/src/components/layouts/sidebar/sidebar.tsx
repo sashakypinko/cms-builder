@@ -12,7 +12,14 @@ import {
   type Theme,
   useTheme,
 } from '@mui/material';
-import { ChevronLeft, ChevronRight, TranslateRounded, LanguageRounded, PeopleRounded } from '@mui/icons-material';
+import {
+  ChevronLeft,
+  ChevronRight,
+  TranslateRounded,
+  LanguageRounded,
+  PeopleRounded,
+  ArticleRounded,
+} from '@mui/icons-material';
 import { type FC, useContext } from 'react';
 import { SidebarContext } from './context/sidebar.context';
 import useAuthorized from '../../../hooks/use-authorized.hook';
@@ -86,6 +93,11 @@ const sidebarLinks: Array<{ label: string; link: string; Icon: FC }> = [
     label: 'sidebar.translations',
     link: RouteEnum.TRANSLATIONS,
     Icon: TranslateRounded,
+  },
+  {
+    label: 'sidebar.pages',
+    link: RouteEnum.PAGES,
+    Icon: ArticleRounded,
   },
 ];
 

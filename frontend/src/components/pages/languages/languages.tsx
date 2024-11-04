@@ -1,5 +1,5 @@
 import { type ReactElement, useMemo, useState } from 'react';
-import { Chip, Container, Grid, Switch } from '@mui/material';
+import { Chip, Container, Switch } from '@mui/material';
 import Table from '../../../common/ui/table';
 import { useTranslation } from 'react-i18next';
 import { DeleteRounded, EditRounded, TranslateRounded } from '@mui/icons-material';
@@ -15,7 +15,6 @@ import useSnackbar from '../../../hooks/use-snackbar.hook';
 import useConfirmation from '../../../hooks/use-confirmation.hook';
 import { HttpStatusCode } from 'axios';
 import { makeErrorsObjectFromResponse } from '../../../helpers/validation-helpers';
-import { ActionWithMeta } from '../../../store/store';
 
 const Languages = (): ReactElement => {
   const { t } = useTranslation();
@@ -44,14 +43,14 @@ const Languages = (): ReactElement => {
         onSuccess: () => {
           handleModalClose();
           resetForm();
-          successSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.success`));
+          successSnackbar(t(`languages.${isNew ? 'create' : 'update'}.success`));
         },
         onError: (error) => {
           setSubmitting(false);
           if (error?.statusCode === HttpStatusCode.UnprocessableEntity) {
             setErrors(makeErrorsObjectFromResponse(t, error.errors));
           }
-          errorSnackbar(t(`languages.${isNew ? 'add-new' : 'update'}.error`));
+          errorSnackbar(t(`languages.${isNew ? 'create' : 'update'}.error`));
         },
       }),
     );

@@ -22,7 +22,7 @@ const UserImage = ({ image, onChange, loading }: Props): ReactElement => {
     if (typeof image === 'string') return image;
     if (image) return URL.createObjectURL(image);
 
-    return '/img/default-avatar.svg';
+    return require('../../../../../../assets/img/default-image.svg');
   }, [image]);
 
   return (

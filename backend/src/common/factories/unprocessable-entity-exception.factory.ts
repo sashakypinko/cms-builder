@@ -3,7 +3,6 @@ import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 const unprocessableEntityExceptionFactory = (
   errors,
 ): UnprocessableEntityException => {
-  console.log(errors);
   return new UnprocessableEntityException({
     statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     errors: errors.reduce(

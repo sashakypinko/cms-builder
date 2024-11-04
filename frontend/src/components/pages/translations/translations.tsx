@@ -49,11 +49,11 @@ const Translations = (): ReactElement => {
         onSuccess: () => {
           handleModalClose();
           resetForm();
-          successSnackbar(t('translations.add-new.success'));
+          successSnackbar(t('translations.create.success'));
         },
         onError: () => {
           setSubmitting(false);
-          errorSnackbar(t('translations.add-new.error'));
+          errorSnackbar(t('translations.create.error'));
         },
       }),
     );

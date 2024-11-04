@@ -24,6 +24,12 @@ declare namespace App {
       error: unknown;
     }
 
+    export interface Pages {
+      pages: IPage[];
+      loading: boolean;
+      error: unknown;
+    }
+
     export interface UI {
       successSnackbar: string;
       errorSnackbar: string;

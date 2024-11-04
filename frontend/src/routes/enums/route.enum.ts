@@ -8,6 +8,7 @@ export enum RouteEnum {
   TRANSLATIONS = '/translations',
   USERS = '/users',
   PROFILE = '/users/:id',
+  PAGES = '/pages',
   EMAIL_TEMPLATES = '/email-templates',
   EDIT_EMAIL_TEMPLATE = '/email-templates/edit',
   NOT_FOUND = '*',

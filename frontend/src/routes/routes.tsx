@@ -10,6 +10,7 @@ import Verify from '../components/auth/verify';
 import Profile from '../components/pages/profile/profile';
 import PasswordRecovery from '../components/auth/password-recovery';
 import EditEmailTemplate from '../components/pages/email-templates/edit-email-template/edit-email-template';
+import Pages from '../components/pages/pages';
 
 const DEFAULT_REDIRECT: string = RouteEnum.SIGN_IN;
 
@@ -61,6 +62,11 @@ const routes: RouteInterface[] = [
   {
     path: RouteEnum.PROFILE,
     Component: Profile,
+    authOnly: true,
+  },
+  {
+    path: RouteEnum.PAGES,
+    Component: Pages,
     authOnly: true,
   },
   {

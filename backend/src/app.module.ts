@@ -11,6 +11,7 @@ import { MailModule } from './mail/mail.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { WsModule } from './ws/ws.module';
 import { FilesModule } from './files/files.module';
+import { PagesModule } from './pages/pages.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FilesModule } from './files/files.module';
     MailModule,
     NotificationsModule,
     UsersModule,
+    PagesModule,
   ],
   providers: [],
 })
